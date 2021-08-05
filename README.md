@@ -6,7 +6,7 @@ The customers API provides the following functions:
 * Adding a new customer
 * Updating an existing customer
 
-The API is secured via a custom identity server that is also contain in the solution.
+The API is secured via a custom identity server that is also contained in the solution.
 
 The API is written in c# and .NET 5
 
