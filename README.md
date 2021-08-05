@@ -1,10 +1,10 @@
 # CustomersAPI
 
 The customers API provides the following functions:
-## Fetch all Customers 
-## Retrieve a customer by Customer Id
-## Adding a new customer
-## Updating an existing customer
+* Fetch all Customers 
+* Retrieve a customer by Customer Id
+* Adding a new customer
+* Updating an existing customer
 
 The API is written in c# and .NET 5
 
