@@ -1,6 +1,6 @@
 ﻿using IdentityModel.Client;
-using Newtonsoft.Json.Linq;
 using System;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -35,24 +35,43 @@ namespace customers.client
             }
 
             Console.WriteLine(tokenResponse.Json);
+            Console.WriteLine("");
+            var customersApiClient = new CustomersApiClient();
 
-            // Create Customers API client
-            var customersApiClient = new HttpClient();
-            customersApiClient.SetBearerToken(tokenResponse.AccessToken);
-
-            var response = await customersApiClient.GetAsync("https://localhost:44363/identity");
-            if (!response.IsSuccessStatusCode)
+            // Fetching all Customers
+            var fetched = await customersApiClient.Fetch(tokenResponse.AccessToken);
+            var customers = fetched.ToList();
+            if (customers.Any()) Console.WriteLine("Fetched Customers");
+            foreach (var c in customers)
             {
-                Console.WriteLine(response.StatusCode);
+                Console.WriteLine($"Customer => {c}");
             }
-            else
-            {
-                var content = await response.Content.ReadAsStringAsync();
-                Console.WriteLine(JArray.Parse(content));
+            Console.WriteLine("");
 
-                var customers = await customersApiClient.GetAsync("https://localhost:44363/api/Customers");
-                //customersApiClient.Send()
+            // Getting a customer by Id
+            var customer = await customersApiClient.Get(tokenResponse.AccessToken, 1);
+            if (customer != null)
+            {
+                Console.WriteLine($"Retrieved Customer {customer}");
+
+                // Updating a customer
+                customer.Name = "Robert";
+                await customersApiClient.Save(tokenResponse.AccessToken, customer);
             }
+            Console.WriteLine("");
+
+            // Adding a customer
+            var newCustomer = new Customer(899, "Fox");
+            await customersApiClient.Save(tokenResponse.AccessToken, newCustomer);
+
+            var final = await customersApiClient.Fetch(tokenResponse.AccessToken);
+            customers = final.ToList();
+            if (customers.Any()) Console.WriteLine("Finalized Customers");
+            foreach (var c in customers)
+            {
+                Console.WriteLine($"Customer => {c}");
+            }
+            Console.WriteLine("");
 
             Console.ReadKey();
         }
