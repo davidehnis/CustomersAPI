@@ -2,9 +2,9 @@
 
 The customers API provides the following functions:
 * Fetch all Customers 
-* Retrieve a customer by Customer Id
-* Adding a new customer
-* Updating an existing customer
+* Retrieve a Customer by Customer Id
+* Adding a new Customer
+* Updating an existing Customer
 
 The API is secured via a custom identity server that is also contained in the solution.
 
