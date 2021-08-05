@@ -9,6 +9,7 @@ The customers API provides the following functions:
 The API is written in c# and .NET 5
 
 # Usage
+```cs
 var client = new HttpClient();
 var discoveryDocument = await client.GetDiscoveryDocumentAsync("https://localhost:5001");
 if (discoveryDocument.IsError)
@@ -36,3 +37,4 @@ var customersApiClient = new CustomersApiClient();
 
 // Fetching all Customers
 var fetched = await customersApiClient.Fetch(tokenResponse.AccessToken);
+```
