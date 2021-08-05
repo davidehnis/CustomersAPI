@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,11 @@ namespace customers.api.Controllers
         [HttpGet("[action]/{id}")]
         public Customer Get(int id)
         {
+            if (id <= 0)
+            {
+                throw new ArgumentException($"Customers Ids have to be larger than zero. Id '{id}' is not compatible");
+            }
+
             var customers = CustomerDatabase.Fetch();
             return customers.FirstOrDefault(c => c.Id == id.ToString());
         }
@@ -26,6 +32,11 @@ namespace customers.api.Controllers
         [HttpPost]
         public void Save([FromBody] Customer customer)
         {
+            if (customer == null)
+            {
+                throw new ArgumentException($"Customer was invalid");
+            }
+
             CustomerDatabase.Save(customer);
         }
     }

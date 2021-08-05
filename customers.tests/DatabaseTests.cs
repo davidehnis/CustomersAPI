@@ -24,7 +24,6 @@ namespace customers.tests
             // Assert
             Assert.IsNotNull(marley);
             Assert.AreEqual("Marley", marley.Name);
-            Process.Start("notepad.exe", "database.json");
         }
 
         [TestMethod]
@@ -60,7 +59,6 @@ namespace customers.tests
 
             // Assert
             Assert.AreEqual(second.Name, "Roberts");
-            Process.Start("notepad.exe", "database.json");
         }
     }
 }
