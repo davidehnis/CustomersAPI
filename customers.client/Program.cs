@@ -10,17 +10,18 @@ namespace customers.client
     {
         private static async Task Main(string[] args)
         {
+            // Create identity client
             var client = new HttpClient();
-            var disco = await client.GetDiscoveryDocumentAsync("https://localhost:5001");
-            if (disco.IsError)
+            var discoveryDocument = await client.GetDiscoveryDocumentAsync("https://localhost:5001");
+            if (discoveryDocument.IsError)
             {
-                Console.WriteLine(disco.Error);
+                Console.WriteLine(discoveryDocument.Error);
                 return;
             }
 
             var tokenResponse = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
             {
-                Address = disco.TokenEndpoint,
+                Address = discoveryDocument.TokenEndpoint,
 
                 ClientId = "client",
                 ClientSecret = "customers.api.secret",
@@ -35,10 +36,11 @@ namespace customers.client
 
             Console.WriteLine(tokenResponse.Json);
 
-            var apiClient = new HttpClient();
-            apiClient.SetBearerToken(tokenResponse.AccessToken);
+            // Create Customers API client
+            var customersApiClient = new HttpClient();
+            customersApiClient.SetBearerToken(tokenResponse.AccessToken);
 
-            var response = await apiClient.GetAsync("https://localhost:6001");
+            var response = await customersApiClient.GetAsync("https://localhost:44363/identity");
             if (!response.IsSuccessStatusCode)
             {
                 Console.WriteLine(response.StatusCode);
@@ -47,6 +49,9 @@ namespace customers.client
             {
                 var content = await response.Content.ReadAsStringAsync();
                 Console.WriteLine(JArray.Parse(content));
+
+                var customers = await customersApiClient.GetAsync("https://localhost:44363/api/Customers");
+                //customersApiClient.Send()
             }
 
             Console.ReadKey();

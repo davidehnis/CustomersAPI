@@ -1,8 +1,7 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 
 namespace customers.api.Controllers
 {
@@ -12,16 +11,22 @@ namespace customers.api.Controllers
     public class CustomersController : ControllerBase
     {
         [HttpGet]
-        public IEnumerable<WeatherForecast> Get()
+        public IEnumerable<Customer> Get()
         {
-            var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = rng.Next(-20, 55),
-                //Summary = Summaries[rng.Next(Summaries.Length)]
-            })
-                .ToArray();
+            return CustomerDatabase.Fetch();
+        }
+
+        //[HttpGet]
+        //public Customer Get(int id)
+        //{
+        //    var customers = CustomerDatabase.Fetch();
+        //    return customers.FirstOrDefault(c => c.Id == id.ToString());
+        //}
+
+        [HttpPost]
+        public void Save(Customer customer)
+        {
+            CustomerDatabase.Save(customer);
         }
     }
 }

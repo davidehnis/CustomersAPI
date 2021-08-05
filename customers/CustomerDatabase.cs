@@ -37,5 +37,30 @@ namespace customers
                 return null;
             }
         }
+
+        public static void Save(Customer customer)
+        {
+            var customers = Fetch().ToList();
+            var exists = customers.FirstOrDefault(c => c.Id == customer.Id);
+            var container = new Container();
+            if (exists == null)
+            {
+                customers.Add(customer);
+                container.Customers = customers.ToArray();
+                Write(container);
+                return;
+            }
+
+            exists.Name = customer.Name;
+            container.Customers = customers.ToArray();
+
+            Write(container);
+        }
+
+        private static void Write(Container container)
+        {
+            var contents = JsonConvert.SerializeObject(container, new CustomerConverter());
+            File.WriteAllText("database.json", contents);
+        }
     }
 }
